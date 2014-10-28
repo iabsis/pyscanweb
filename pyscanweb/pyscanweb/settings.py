@@ -1,5 +1,5 @@
 """
-Django settings for PyScan project.
+Django settings for pyscanweb project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'e4pvkiz_e$h6o9*lrmth304+aj#$m7!@^jjy$ah((^pef)!s7*'
+SECRET_KEY = 'y=wku+u#$%xoyjbdrvcwv9ac4!=+sk9sf(mzd)d_j#7tt8jg0n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -48,9 +48,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'PyScan.urls'
+ROOT_URLCONF = 'pyscanweb.urls'
 
-WSGI_APPLICATION = 'PyScan.wsgi.application'
+WSGI_APPLICATION = 'pyscanweb.wsgi.application'
 
 
 # Database
