@@ -1,6 +1,6 @@
 # pyscan
 
-Python web interface is a web interface that allows users to use the pyinsane library.
+Pyscan is a web interface that allows users to use the pyinsane library.
 
 # Development
 
