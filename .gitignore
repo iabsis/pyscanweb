@@ -1,2 +1,5 @@
 .project
 .pydevproject
+dev_env/.sass-cache
+sftp-config.json
+secret.json

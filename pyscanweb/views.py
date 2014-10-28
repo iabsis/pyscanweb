@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 def scanpage(request):
-    template = loader.get_template('pyscanweb/index.html')
+    template = loader.get_template('index.html')
     context = RequestContext(request, {
         'test': 'bonjour',
     })
