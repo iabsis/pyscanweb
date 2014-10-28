@@ -19,6 +19,16 @@ And replace by :
 
 ```tasks: ['compass', 'concat', 'concat_css', 'uglify', 'cssmin'],```
 
+If you want your grunt able to upload file to your webserver, you must create a "secret.json" file with the following content :
+
+```{
+    "host" : "192.168.0.5",
+    "username" : "root",
+    "password" : "pfcqopfs"
+}```
+
+And then, update the Gruntfile.json according your server configuration
+
 
 # Deployment
 To be completed
