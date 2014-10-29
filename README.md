@@ -23,7 +23,7 @@ If you want your grunt able to upload file to your webserver, you must create a 
 
 ```{
     "host" : "192.168.0.5",
-    "username" : "root",
+    "username" : "login",
     "password" : "password"
 }```
 
