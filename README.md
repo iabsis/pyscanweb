@@ -24,7 +24,7 @@ If you want your grunt able to upload file to your webserver, you must create a 
 ```{
     "host" : "192.168.0.5",
     "username" : "root",
-    "password" : "pfcqopfs"
+    "password" : "password"
 }```
 
 And then, update the Gruntfile.json according your server configuration
