@@ -7,15 +7,15 @@ class Scanner:
     
     def getScannerList(self):
         scanOption = {}
-        for scanner in pyinsane.get_devices():
-            scanOption[str(scanner)] = {}
-            for opt in scanner.options.values():
+        for device in pyinsane.get_devices():
+            scanOption[device.name] = {}
+            for opt in device.options.values():
                 if opt.name == "mode":
-                    scanOption[str(scanner)]["mode"] = opt.constraint
+                    scanOption[device.name]["mode"] = opt.constraint
                 elif opt.name == "source":
-                    scanOption[str(scanner)]["source"] = opt.constraint
+                    scanOption[device.name]["source"] = opt.constraint
                 elif opt.name == "resolution":
-                    scanOption[str(scanner)]["resolution"] = {"min": opt.constraint[0], "max": opt.constraint[1], "step": opt.constraint[2]}
+                    scanOption[device.name]["resolution"] = {"min": opt.constraint[0], "max": opt.constraint[1], "step": opt.constraint[2]}
 
         return scanOption
         

@@ -9,7 +9,8 @@ module.exports = function(grunt) {
                     "./": [
                         "../pyscanweb/static/pyscanweb/css/style.min.css",
                         "../pyscanweb/static/pyscanweb/css/style.css",
-                        "../pyscanweb/static/pyscanweb/js/global.min.js"
+                        "../pyscanweb/static/pyscanweb/js/global.min.js",
+                        "../pyscanweb/static/pyscanweb/js/global.js"
                     ]
                 },
                 options: {
@@ -38,11 +39,12 @@ module.exports = function(grunt) {
                     'js/libs/wow.min.js',
         		    'js/libs/jquery.nicescroll.min.js',
                     'js/libs/gumby.init.js',
+                    'js/libs/select2.js',
                     'js/plugins.js',
                     'js/main.js',
                     'js/app.js',
                 ],
-                dest: 'js/global-merged.js'
+                dest: '../pyscanweb/static/pyscanweb/js/global.js'
             }
         },
         uglify: {
@@ -50,7 +52,7 @@ module.exports = function(grunt) {
                 mangle: false
             },
             build: {
-                src:  'js/global-merged.js',
+                src:  '../pyscanweb/static/pyscanweb/js/global.js',
                 dest: '../pyscanweb/static/pyscanweb/js/global.min.js'
             }
         },
@@ -67,7 +69,7 @@ module.exports = function(grunt) {
               // Task-specific options go here.
             },
             all: {
-              src: ["sass/gumby.css"],
+              src: ["sass/gumby.css", "css/select2.css"],
               dest: "../pyscanweb/static/pyscanweb/css/style.css"
             },
         },

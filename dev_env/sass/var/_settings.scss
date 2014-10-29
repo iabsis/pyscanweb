@@ -56,12 +56,12 @@ $xsmall: ms(-2);
 $small: ms(-1);
 $norm: ms(0);									// $base-font-size (16px == default)
 $med: ms(1);
-$large: ms(2);
-$larger: ms(3);
-$xlarge: ms(4);
-$xxlarge: ms(5);
-$xxxlarge: ms(6);
-$reallybig: ms(8);
+$large: ms(1.4);
+$larger: ms(2);
+$xlarge: ms(2.5);
+$xxlarge: ms(3);
+$xxxlarge: ms(4);
+$reallybig: ms(5.5);
 $tremendous: ms(9);
 $absurd: ms(10);
 
@@ -74,7 +74,7 @@ $body-link-color: #d04526 !default;
 $body-link-hover-color: #c03d20 !default;
 
 // User Interface Colors
-$global-bg-color: #fff;
+$global-bg-color: #333;
 $navbar-color: #4a4d50;
 $navbar-link-color: #fff;
 
@@ -93,6 +93,8 @@ $info-hover-color: #868d92;
 $danger-hover-color: #f14f4f;
 $warning-hover-color: #fdd27f;
 $success-hover-color: #66d92f;
+
+$primary-disabled-color: lighten($primary-color, 10%);
 
 $horizontal-rule-color: #ccc !default;
 

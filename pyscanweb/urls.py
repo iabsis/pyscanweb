@@ -8,5 +8,8 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'json/scanners_list$', views.json_scaners_list, name="json_scanners_list"),
+    url(r'json/launch_scanner$', views.json_launch_scanner, name="json_launch_scanner"),
+    url(r'last_scanned_image$', views.get_last_scanned_image, name="last_scanned_image"),
     url(r'^$', views.scanpage, name="scanpage"),
 )

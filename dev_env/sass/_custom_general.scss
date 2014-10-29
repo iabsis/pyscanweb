@@ -1,0 +1,33 @@
+.hidden {
+    display: none;
+}
+
+.very-big-image {
+    @include font-size($reallybig);
+}
+.action-bar {
+    margin-top: 40px;
+}
+
+.loader {
+    display: none;
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('../img/page-loader.gif') 50% 50% no-repeat rgb(249,249,249);
+    @include opacity(.97);
+}
+
+body {
+    background-image: url('../img/dark_wood.png');
+}
+
+.btn {
+    button[disabled] {
+        color: #fff;
+        background-color: $primary-disabled-color;
+    }
+}

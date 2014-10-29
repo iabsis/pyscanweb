@@ -1,0 +1,44 @@
+.pyscanweb-ui {
+    margin-top: 100px;
+    background-color: $sidebar-color;
+
+    .very-big-image {
+        display: block;
+        line-height: 400px;
+    }
+}
+
+.pyscanweb-ui-preview, .pyscanweb-ui-sidebar {
+    height: 500px;
+
+}
+
+.pyscanweb-ui-preview {
+    background-color: $white;
+    background-color: $white;
+    overflow: scroll;
+    padding: 20px
+}
+
+.pyscanweb-ui-sidebar {
+    background-color: $sidebar-color;
+
+    margin-left: 0;
+    padding: 10px;
+}
+
+.pyscanweb-ui {
+    @include box-shadow(0 0px 36px 20px rgba(0,0,0,0.3));
+}
+
+
+.pyscanweb-ui-preview {
+    img {
+        min-width : 20%;
+        max-width : 100%;
+        display: inline-block;
+        margin: 10px;
+        border: 5px solid $white;
+        @include box-shadow(0 0 16px 5px rgba(0,0,250,.2));
+    }
+}

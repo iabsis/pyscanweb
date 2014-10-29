@@ -1,5 +1,60 @@
 {% extends 'base.html' %}
 
 {% block 'main_content' %}
-    Mon block de scan test
+    <div class="row">
+        <div class="twelve columns main-ui">
+            <section class="pyscanweb-ui">
+                <div class="row">
+                    <div class="eight columns pyscanweb-ui-preview" id="pyscan-web-preview">
+                        <div class="pyscanweb-image-placeholder" id="pyscan-web-preview-placeholder">
+                            <i class="entypo icon-picture very-big-image"></i>Choose parameter and click "scan image" to show the preview
+                        </div>
+                    </div>
+                    <div class="four columns pyscanweb-ui-sidebar">
+                        <h2>Controls</h2>
+                        <form action="" id="scanner-form" action="{% url 'json_launch_scanner' %}" method="post">
+                            {% csrf_token %}
+                            <div class="field">
+                                <label class="" for="scanner-selector">Choose your scanner</label>
+                                <select id="scanner-selector" name="scanner">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="scanner-mode-selector" class="">Scanner color mode</label>
+                                <select name="mode" id="scanner-mode-selector">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="field">
+                                <label for="scanner-resolution-selector" class="">Scanner resolution</label>
+                                <select name="resolution" id="scanner-resolution-selector">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+
+                            <div class="field action-bar">
+                                <div class="medium primary btn"><button disabled="disabled" id="launch-scanner-button"><i class="entypo icon-picture"></i>Scan image</button></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    
+
+{% endblock %}
+
+{% block "footer_javascripts" %}
+    <script type="text/javascript">
+        jQuery(function() {
+            PyscanWeb.initScannerUi({
+                scanListUrl: "{% url 'json_scanners_list' %}",
+                launchScannerUrl: "{% url 'json_launch_scanner' %}",
+            });
+        });
+    </script>
 {% endblock %}

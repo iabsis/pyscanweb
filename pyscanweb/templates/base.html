@@ -28,6 +28,7 @@
 </head>
 
 <body>
+    <div id="loader" class="loader"></div>
     {% block 'main_content' %}
         Main content
     {% endblock %}
@@ -51,7 +52,8 @@
     }
     </script>
     
-    <script src="{% static 'pyscanweb/js/global.min.js' %}"></script>
-
+    <script src="{% static 'pyscanweb/js/global.js' %}"></script>
+    {% block "footer_javascripts" %}
+    {% endblock %}
   </body>
 </html>
