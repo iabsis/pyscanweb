@@ -5336,7 +5336,7 @@ var PyscanWeb = (function(jQuery) {
                     });
 
                     if (jsonData.links.length > 1) {
-                        infoMessage("It appears that you received multiple files. You can click the different images to uncheck the unwanted ones and click \"get PDF\" to get a pdf file.", 10)
+                        infoMessage("It appears that you received multiple files. You can click the different images to uncheck the unwanted ones and click \"get PDF\" to get a pdf file.", 10000)
                     }
                     for(var i = 0; i < jsonData.links.length; i++) {
                         var $img = $('<img data-id="' + jsonData.links[i].id + '" class="preview-image" src="' + jsonData.links[i].url + '?timestamp=' + (new Date().getTime()) + '" />');
