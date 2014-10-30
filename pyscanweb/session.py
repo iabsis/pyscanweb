@@ -35,4 +35,6 @@ class SessionScanedImagesManager(object):
         return self.get_session_images_list()[id]
 
     def clear(self):
-        del(self.request.session['scanned_images'])
+        if(self.request.session.get('scanned_images', False)):
+            del(self.request.session['scanned_images'])
+            
