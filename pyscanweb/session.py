@@ -26,5 +26,13 @@ class SessionScanedImagesManager(object):
         """
         Return the image name of the last scanned image
         """
-        print self.get_session_images_list()
         return self.get_session_images_list()[-1]
+
+    def get_image(self, id):
+        """
+        Return the image saved on the list id
+        """
+        return self.get_session_images_list()[id]
+
+    def clear(self):
+        self.request.session = []

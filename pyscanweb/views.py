@@ -14,6 +14,8 @@ from session import *
 
 def scanpage(request):
     "Show the main scanning page"
+    sessionManager = SessionScanedImagesManager(request)
+    sessionManager.clear()
     template = loader.get_template('index.html')
     context = RequestContext(request, {
         'test': 'bonjour',
@@ -38,35 +40,54 @@ def json_launch_scanner(request):
         device = pyinsane.Scanner(name=request.POST.get("scanner"))
         device.options['mode'].value = request.POST.get("mode")
         device.options['resolution'].value = int(request.POST.get("resolution"))
+        device.options['source'].value = request.POST.get("source")
+        multipage = bool(int(request.POST.get("multipage")))
         
     except Exception, e:
         return HttpResponse(json.dumps({'error' : 'Invalid post data'}), content_type="application/json")
-
-    scan_session = device.scan(multiple=False)
+    scan_session = device.scan(multiple=multipage)
     scan_success = False
 
-    try:
-        while True:
-            scan_session.scan.read()
-            scan_success = True
-    except EOFError:
-        if not scan_success :
-            return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
+    if not multipage:
+        try:
+            while True:
+                scan_session.scan.read()
+                scan_success = True
+        except EOFError:
+            if not scan_success :
+                return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
+    else :
+        try:
+            while True:
+                try:
+                    scan_session.scan.read()
+                    scan_success = True
+                except EOFError:
+                    pass
+        except StopIteration:
+                  % len(scan_session.images))
+            if not scan_success :
+                return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
 
     # Init the session manager
     sessionManager = SessionScanedImagesManager(request)
     try:
+        nb_images = 0
         for image in scan_session.images :
             tf = tempfile.NamedTemporaryFile(prefix="pyscanweb_")
             image.save(tf.name + ".jpg", 'JPEG')
             sessionManager.session_add_image(tf.name + ".jpg")
+            nb_images+=1
     except Exception, e:
         return HttpResponse(json.dumps({'error' : "Returned error : %s" % (str(e))}), content_type="application/json")
     
-    sessionManager.get_session_images_list()
 
     linksList = [];
-    linksList.append(reverse('last_scanned_image'))
+    images_list = sessionManager.get_session_images_list()
+    total_image_count = len(images_list)
+
+    for i in range(total_image_count-nb_images-1, total_image_count-1):
+        linksList.append(reverse('get_scanned_image_id', kwargs={'id': i }))
 
     return HttpResponse(json.dumps({'error' : False, 'links' : linksList}), content_type="application/json")
 
@@ -74,9 +95,22 @@ def json_launch_scanner(request):
 def get_last_scanned_image(request):
     "Show the last scanned image"
     sessionManager = SessionScanedImagesManager(request)
-    image_target = sessionManager.get_last_image()
+
+    
     try:
+        image_target = sessionManager.get_last_image()
         with open(image_target, "rb") as f:
             return HttpResponse(f.read(), content_type="image/jpeg")
     except IOError:
-        return HttpResponseNotFound('<h1>Page not found</h1>')
+        return HttpResponseNotFound('<h1>Image not found</h1>')
+
+
+def get_session_image_id(request, id):
+    sessionManager = SessionScanedImagesManager(request)
+    try:
+        image_target = sessionManager.get_image(int(id))
+        with open(image_target, "rb") as f:
+            return HttpResponse(f.read(), content_type="image/jpeg")
+    except:
+        return HttpResponseNotFound('<h1>Image not found</h1>')
+

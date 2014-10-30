@@ -5132,6 +5132,8 @@ var PyscanWeb = (function(jQuery) {
         'scannerListElement' : '#scanner-selector',
         'scannerModeElement' : '#scanner-mode-selector',
         'scannerResolutionElement' : '#scanner-resolution-selector',
+        'scannerSourceElement' : '#scanner-source-selector',
+        'scannerMultiPageElement' : '#scanner-multipage',
         'launchScannerButton' : '#launch-scanner-button',
         'scannerForm' : '#scanner-form'
     };
@@ -5175,6 +5177,18 @@ var PyscanWeb = (function(jQuery) {
                 }
             } 
 
+            // Update the available spirces
+            if (scannersConfiguration[e.val] && scannersConfiguration[e.val].source !== undefined) {
+                var availableSources = scannersConfiguration[e.val].source;
+                var $scannerSoueceSelector = $(params.scannerSourceElement);
+                $scannerSoueceSelector.find("option").remove();
+                $scannerSoueceSelector.append("<option></option>");
+
+                for(var i = 0; i < availableSources.length; i++) {
+                    $scannerSoueceSelector.append("<option value=\"" + availableSources[i] + "\">" + availableSources[i] + "</option>");
+                }
+            } 
+
             // Update the available resolutions
             if (scannersConfiguration[e.val] && scannersConfiguration[e.val].resolution !== undefined) {
                 var resolutionParameters = scannersConfiguration[e.val].resolution;
@@ -5210,7 +5224,6 @@ var PyscanWeb = (function(jQuery) {
             startLoader();
             $.getJSON( params.scanListUrl, function(data) {
                 scannersConfiguration = data;
-                console.log(scannersConfiguration);
                 createScannersInterface();
             })
             .fail(function() {
@@ -5236,8 +5249,11 @@ var PyscanWeb = (function(jQuery) {
             "placeholder" : "Select the resolution"
         });
 
+        $(params.scannerSourceElement).select2({
+            "placeholder" : "Select the source"
+        });
+
         // Manage the form validation
-        console.log($(params.scannerForm));
         $(params.scannerForm).submit(function(event) {
 
             event.preventDefault();
@@ -5247,6 +5263,8 @@ var PyscanWeb = (function(jQuery) {
                 scanner: $(params.scannerListElement).select2().val(),
                 mode: $(params.scannerModeElement).select2().val(),
                 resolution: $(params.scannerResolutionElement).select2().val(),
+                source: $(params.scannerSourceElement).select2().val(),
+                multipage: $(params.scannerMultiPageElement).is(":checked") ? 1 : 0
             };
 
             $.ajax({
@@ -5268,7 +5286,6 @@ var PyscanWeb = (function(jQuery) {
                     for(var i = 0; i < jsonData.links.length; i++) {
                         var $img = $('<img class="preview-image" src="' + jsonData.links[i] + '?timestamp=' + (new Date().getTime()) + '" />');
                         $img.hide();
-                        console.log($img);
                         $("#pyscan-web-preview").append(
                             $img
                         );
