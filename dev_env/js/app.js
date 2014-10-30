@@ -2,9 +2,26 @@ var PyscanWeb = (function(jQuery) {
     var $ = jQuery;
     var scannersConfiguration = {};
 
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
     var params = {
         'scanListUrl' : null,
         'launchScannerUrl' : null,
+        'pdfGeneratorUrl' : null,
         'scannerListElement' : '#scanner-selector',
         'scannerModeElement' : '#scanner-mode-selector',
         'scannerResolutionElement' : '#scanner-resolution-selector',
@@ -12,6 +29,7 @@ var PyscanWeb = (function(jQuery) {
         'scannerMultiPageElement' : '#scanner-multipage',
         'launchScannerButton' : '#launch-scanner-button',
         'scannerForm' : '#scanner-form'
+
     };
 
     var startLoader = function() {
@@ -92,7 +110,16 @@ var PyscanWeb = (function(jQuery) {
     }
 
     var errorMessage = function(msg) {
-        alert(msg)
+        noty({
+            timeout: 3000, 
+            type: 'error',
+            layout: 'topCenter', 
+            animation: { 
+                open: {opacity: 'toggle'}, 
+                close: {opacity: 'toggle'} 
+            }, 
+            text: msg
+        });
     }
 
     var getScannersList = function() {
@@ -160,7 +187,7 @@ var PyscanWeb = (function(jQuery) {
                     });
 
                     for(var i = 0; i < jsonData.links.length; i++) {
-                        var $img = $('<img class="preview-image" src="' + jsonData.links[i] + '?timestamp=' + (new Date().getTime()) + '" />');
+                        var $img = $('<img data-id="' + jsonData.links[i].id + '" class="preview-image" src="' + jsonData.links[i].url + '?timestamp=' + (new Date().getTime()) + '" />');
                         $img.hide();
                         $("#pyscan-web-preview").append(
                             $img
@@ -174,7 +201,23 @@ var PyscanWeb = (function(jQuery) {
             }).complete(function() {
                 stopLoader();
             });
-        })
+        });
+
+        // Manage the pdf generation
+        $("#generate-pdf-button").on('click', function(e) {
+            console.log("generate pdf");
+            var $form = $("<form action='" + params.pdfGeneratorUrl + "' method='post'>");
+            $form.append('<input type="text" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '" />');
+            $("#pyscan-web-preview img").each(function() {
+                var id = $(this).data("id");
+                $form.append('<input type="text" name="images_list" value="' + id + '" />')
+            });
+
+            $form.hide();
+            $("body").append($form);
+            $form.submit();
+            $form.remove();
+        });
         
         getScannersList();
     }
@@ -189,6 +232,9 @@ var PyscanWeb = (function(jQuery) {
             }
             params = $.extend(params, init_params);
             initScannerUi();
+        },
+        getCookie : function(name) {
+            return getCookie(name);
         }
     }
 })(jQuery);
@@ -202,21 +248,7 @@ var PyscanWeb = (function(jQuery) {
  * @return {[type]}          [description]
  */
 $(document).ajaxSend(function(event, xhr, settings) {
-    function getCookie(name) {
-        var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
-            var cookies = document.cookie.split(';');
-            for (var i = 0; i < cookies.length; i++) {
-                var cookie = jQuery.trim(cookies[i]);
-                // Does this cookie string begin with the name we want?
-                if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
+    
     function sameOrigin(url) {
         // url could be relative or scheme relative or absolute
         var host = document.location.host; // host + port
@@ -234,6 +266,6 @@ $(document).ajaxSend(function(event, xhr, settings) {
     }
 
     if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        xhr.setRequestHeader("X-CSRFToken", PyscanWeb.getCookie('csrftoken'));
     }
 });

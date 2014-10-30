@@ -39,6 +39,7 @@ module.exports = function(grunt) {
                     'js/libs/wow.min.js',
         		    'js/libs/jquery.nicescroll.min.js',
                     'js/libs/gumby.init.js',
+                    'js/libs/jquery.noty.packaged.min.js',
                     'js/libs/select2.js',
                     'js/plugins.js',
                     'js/main.js',

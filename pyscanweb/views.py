@@ -3,6 +3,8 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
+import fpdf
+from os import remove
 from pyinsanehelper.scanner import Scanner
 import pyinsane.src.abstract as pyinsane
 
@@ -87,7 +89,10 @@ def json_launch_scanner(request):
     total_image_count = len(images_list)
 
     for i in range(total_image_count-nb_images, total_image_count):
-        linksList.append(reverse('get_scanned_image_id', kwargs={'id': i }))
+        linksList.append({ \
+            'url' : reverse('get_scanned_image_id', kwargs={'id': i }), \
+            'id' : i \
+        })
 
     return HttpResponse(json.dumps({'error' : False, 'links' : linksList}), content_type="application/json")
 
@@ -96,7 +101,6 @@ def get_last_scanned_image(request):
     "Show the last scanned image"
     sessionManager = SessionScanedImagesManager(request)
 
-    
     try:
         image_target = sessionManager.get_last_image()
         with open(image_target, "rb") as f:
@@ -114,3 +118,30 @@ def get_session_image_id(request, id):
     except:
         return HttpResponseNotFound('<h1>Image not found</h1>')
 
+
+def generate_pdf(request):
+    images_list = request.POST.getlist("images_list")
+    pprint.pprint(images_list)
+    sessionManager = SessionScanedImagesManager(request)
+
+    pdf_filename = tempfile.NamedTemporaryFile(prefix="pyscanweb_pdf_").name + ".pdf"
+    f = fpdf.FPDF()
+    
+
+    for image in images_list:
+        sessionImage = sessionManager.get_image(int(image))
+        pprint.pprint(sessionImage)
+        f.add_page()
+        f.image(sessionImage, x=0, y=0, w=210, h=0)
+
+
+    f.output(name=pdf_filename, dest='F')
+
+    try:
+        with open(pdf_filename, "rb") as f:
+            response = HttpResponse(f.read(), content_type="application/force-download")
+            remove(pdf_filename)
+            return response
+    except IOError:
+        return HttpResponseNotFound('<h1>Image not found</h1>')
+    

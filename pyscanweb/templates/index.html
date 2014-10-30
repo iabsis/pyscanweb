@@ -47,7 +47,8 @@
                             </div>
 
                             <div class="field action-bar">
-                                <div class="medium primary btn"><button disabled="disabled" id="launch-scanner-button"><i class="entypo icon-picture"></i>Scan image</button></div>
+                                <div class="medium primary btn"><button disabled="disabled" id="launch-scanner-button"><i class="entypo icon-picture"></i>Scan</button></div>
+                                 <div class="medium danger btn"><a href="javascript:;" id="generate-pdf-button">Get pdf</a></div>
                             </div>
                             <div class="field">
                                 <a class="small-link" href="http://iabsis.com">Provided by iabsis.com</a>
@@ -70,6 +71,7 @@
             PyscanWeb.initScannerUi({
                 scanListUrl: "{% url 'json_scanners_list' %}",
                 launchScannerUrl: "{% url 'json_launch_scanner' %}",
+                pdfGeneratorUrl: "{% url 'generate_pdf' %}",
             });
         });
     </script>
