@@ -7483,13 +7483,17 @@ body {
   display: block;
   line-height: 400px;
 }
+/* line 10, _custom_pyscanweb_ui.scss */
+.pyscanweb-ui .pyscanweb-image-placeholder {
+  text-align: center;
+}
 
-/* line 11, _custom_pyscanweb_ui.scss */
+/* line 16, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui-preview, .pyscanweb-ui-sidebar {
   height: 500px;
 }
 
-/* line 16, _custom_pyscanweb_ui.scss */
+/* line 21, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui-preview {
   background-color: white;
   background-color: white;
@@ -7497,21 +7501,21 @@ body {
   padding: 20px;
 }
 
-/* line 23, _custom_pyscanweb_ui.scss */
+/* line 28, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui-sidebar {
   background-color: #efefef;
   margin-left: 0;
   padding: 10px;
 }
 
-/* line 30, _custom_pyscanweb_ui.scss */
+/* line 35, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui {
   -webkit-box-shadow: 0 0px 36px 20px rgba(0, 0, 0, 0.3);
   -moz-box-shadow: 0 0px 36px 20px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0px 36px 20px rgba(0, 0, 0, 0.3);
 }
 
-/* line 36, _custom_pyscanweb_ui.scss */
+/* line 41, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui-preview img {
   min-width: 20%;
   max-width: 100%;
