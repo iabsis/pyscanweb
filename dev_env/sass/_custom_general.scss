@@ -31,3 +31,7 @@ body {
         background-color: $primary-disabled-color;
     }
 }
+
+.small-link {
+    @include font-size($small);
+}

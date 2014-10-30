@@ -2590,14 +2590,14 @@ p.lead {
 
 /* line 75, _typography.scss */
 a {
-  color: #d04526;
+  color: #333333;
   text-decoration: none;
   outline: 0;
   line-height: inherit;
 }
 /* line 80, _typography.scss */
 a:hover {
-  color: #c03d20;
+  color: #3085d6;
 }
 
 /*=====================================================
@@ -5037,7 +5037,7 @@ img {
   }
   /* line 191, ui/_navbar.scss */
   .navbar ul li.active .dropdown ul li a:hover {
-    color: #d04526;
+    color: #333333;
   }
 }
 
@@ -5200,7 +5200,7 @@ img {
   }
   /* line 300, ui/_navbar.scss */
   .navbar li .dropdown.active .dropdown ul li a:hover {
-    color: #d04526;
+    color: #333333;
   }
 }
 
@@ -5234,7 +5234,7 @@ img {
 .navbar li .dropdown ul > li a {
   display: block;
   padding: 0 20px;
-  color: #d04526;
+  color: #333333;
   border-bottom: 1px solid #cccccc;
   text-shadow: none;
   height: 62px;
@@ -5315,7 +5315,7 @@ img {
   }
   /* line 378, ui/_navbar.scss */
   .gumby-no-touch .navbar ul li:hover .dropdown ul li a:hover {
-    color: #d04526;
+    color: #333333;
   }
 }
 
@@ -6759,7 +6759,7 @@ textarea {
 }
 /* line 39, ui/_labels.scss */
 .badge.light a, .label.light a {
-  color: #d04526;
+  color: #333333;
 }
 /* line 43, ui/_labels.scss */
 .badge.dark, .label.dark {
@@ -7473,6 +7473,12 @@ body {
   background-color: #5b9ede;
 }
 
+/* line 35, _custom_general.scss */
+.small-link {
+  font-size: 10px;
+  font-size: 0.625rem;
+}
+
 /* line 1, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui {
   margin-top: 100px;
@@ -7490,7 +7496,7 @@ body {
 
 /* line 16, _custom_pyscanweb_ui.scss */
 .pyscanweb-ui-preview, .pyscanweb-ui-sidebar {
-  height: 500px;
+  height: 550px;
 }
 
 /* line 21, _custom_pyscanweb_ui.scss */
