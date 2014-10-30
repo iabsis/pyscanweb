@@ -117,6 +117,7 @@ var PyscanWeb = (function(jQuery) {
         $(params.scannerForm).submit(function(event) {
 
             event.preventDefault();
+            startLoader();
 
             var submitData = {
                 scanner: $(params.scannerListElement).select2().val(),
@@ -153,6 +154,8 @@ var PyscanWeb = (function(jQuery) {
                 };
             }).error(function(e) {
                 errorMessage('Unable to get image from scanner. Please try to refresh the page and try again');
+            }).complete(function() {
+                stopLoader();
             });
         })
         
