@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
@@ -65,7 +65,7 @@ def json_launch_scanner(request):
                 except EOFError:
                     pass
         except StopIteration:
-                  % len(scan_session.images))
+
             if not scan_success :
                 return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
 
@@ -86,7 +86,7 @@ def json_launch_scanner(request):
     images_list = sessionManager.get_session_images_list()
     total_image_count = len(images_list)
 
-    for i in range(total_image_count-nb_images-1, total_image_count-1):
+    for i in range(total_image_count-nb_images, total_image_count):
         linksList.append(reverse('get_scanned_image_id', kwargs={'id': i }))
 
     return HttpResponse(json.dumps({'error' : False, 'links' : linksList}), content_type="application/json")
