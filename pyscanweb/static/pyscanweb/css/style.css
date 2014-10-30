@@ -7531,6 +7531,27 @@ body {
   -webkit-box-shadow: 0 0 16px 5px rgba(0, 0, 250, 0.2);
   -moz-box-shadow: 0 0 16px 5px rgba(0, 0, 250, 0.2);
   box-shadow: 0 0 16px 5px rgba(0, 0, 250, 0.2);
+  cursor: pointer;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+/* line 52, _custom_pyscanweb_ui.scss */
+.pyscanweb-ui-preview img.active {
+  border-color: #3085d6;
+  -webkit-transition-property: all;
+  -moz-transition-property: all;
+  -o-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
 }
 /*
 Version: 3.5.1 Timestamp: Tue Jul 22 18:58:56 EDT 2014

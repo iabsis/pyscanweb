@@ -29,7 +29,6 @@ var PyscanWeb = (function(jQuery) {
         'scannerMultiPageElement' : '#scanner-multipage',
         'launchScannerButton' : '#launch-scanner-button',
         'scannerForm' : '#scanner-form'
-
     };
 
     var startLoader = function() {
@@ -122,6 +121,22 @@ var PyscanWeb = (function(jQuery) {
         });
     }
 
+    var infoMessage = function(msg, time) {
+        if (time === undefined) {
+            time = 3000
+        };
+        noty({
+            timeout: time, 
+            type: 'info',
+            layout: 'topCenter', 
+            animation: { 
+                open: {opacity: 'toggle'}, 
+                close: {opacity: 'toggle'} 
+            }, 
+            text: msg
+        });
+    }
+
     var getScannersList = function() {
         if (params.scanListUrl) {
             startLoader();
@@ -186,17 +201,25 @@ var PyscanWeb = (function(jQuery) {
                         $(this).remove();
                     });
 
+                    if (jsonData.links.length > 1) {
+                        infoMessage("It appears that you received multiple files. You can click the different images to uncheck the unwanted ones and click \"get PDF\" to get a pdf file.", 10)
+                    }
                     for(var i = 0; i < jsonData.links.length; i++) {
                         var $img = $('<img data-id="' + jsonData.links[i].id + '" class="preview-image" src="' + jsonData.links[i].url + '?timestamp=' + (new Date().getTime()) + '" />');
                         $img.hide();
+                        $img.addClass("active");
                         $("#pyscan-web-preview").append(
                             $img
                         );
 
+                        $img.on("click", function() {
+                            $(this).toggleClass("active");
+                        });
+
                         $img.fadeIn();
                     }
                 };
-            }).error(function(e) {
+            }).error(function(a, b, c) {
                 errorMessage('Unable to get image from scanner. Please try to refresh the page and try again');
             }).complete(function() {
                 stopLoader();
@@ -205,10 +228,9 @@ var PyscanWeb = (function(jQuery) {
 
         // Manage the pdf generation
         $("#generate-pdf-button").on('click', function(e) {
-            console.log("generate pdf");
             var $form = $("<form action='" + params.pdfGeneratorUrl + "' method='post'>");
             $form.append('<input type="text" name="csrfmiddlewaretoken" value="' + getCookie('csrftoken') + '" />');
-            $("#pyscan-web-preview img").each(function() {
+            $("#pyscan-web-preview img.active").each(function() {
                 var id = $(this).data("id");
                 $form.append('<input type="text" name="images_list" value="' + id + '" />')
             });

@@ -45,5 +45,16 @@
         margin: 10px;
         border: 5px solid $white;
         @include box-shadow(0 0 16px 5px rgba(0,0,250,.2));
+        cursor: pointer;
+        @include transition-property(all);
+        @include transition-duration(.4s);
+
+        &.active {
+            border-color: $primary-color;
+            @include transition-property(all);
+            @include transition-duration(.4s);
+        }
     }
+
+
 }

@@ -19,9 +19,7 @@ def scanpage(request):
     sessionManager = SessionScanedImagesManager(request)
     sessionManager.clear()
     template = loader.get_template('index.html')
-    context = RequestContext(request, {
-        'test': 'bonjour',
-    })
+    context = RequestContext(request, {})
     return HttpResponse(template.render(context))
 
 
@@ -36,6 +34,7 @@ def json_scaners_list(request):
 def json_launch_scanner(request):
     "Start the scanner and return a json response to update the web page"
     image_result = {}
+
     try:
         if request.method != 'POST':
             raise Exception('No post data')
@@ -44,6 +43,7 @@ def json_launch_scanner(request):
         device.options['resolution'].value = int(request.POST.get("resolution"))
         device.options['source'].value = request.POST.get("source")
         multipage = bool(int(request.POST.get("multipage")))
+
         
     except Exception, e:
         return HttpResponse(json.dumps({'error' : 'Invalid post data'}), content_type="application/json")
@@ -51,6 +51,7 @@ def json_launch_scanner(request):
     scan_success = False
 
     if not multipage:
+
         try:
             while True:
                 scan_session.scan.read()
@@ -82,18 +83,19 @@ def json_launch_scanner(request):
             nb_images+=1
     except Exception, e:
         return HttpResponse(json.dumps({'error' : "Returned error : %s" % (str(e))}), content_type="application/json")
-    
+
 
     linksList = [];
     images_list = sessionManager.get_session_images_list()
     total_image_count = len(images_list)
-
+    print nb_images
     for i in range(total_image_count-nb_images, total_image_count):
-        linksList.append({ \
-            'url' : reverse('get_scanned_image_id', kwargs={'id': i }), \
-            'id' : i \
+        print i, reverse('get_scanned_image_id', kwargs={'id': i })
+        linksList.append({ 
+            'url' : reverse('get_scanned_image_id', kwargs={'id': i }), 
+            'id' : i 
         })
-
+    
     return HttpResponse(json.dumps({'error' : False, 'links' : linksList}), content_type="application/json")
 
 
