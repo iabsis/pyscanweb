@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 import fpdf
 from os import remove
 from pyinsanehelper.scanner import Scanner
-import pyinsane.src.abstract as pyinsane
+import sane
+import sys
 
 import pprint
 import json
@@ -35,58 +36,68 @@ def json_launch_scanner(request):
     "Start the scanner and return a json response to update the web page"
     image_result = {}
 
+
     try:
         if request.method != 'POST':
             raise Exception('No post data')
-        device = pyinsane.Scanner(name=request.POST.get("scanner"))
-        device.options['mode'].value = request.POST.get("mode")
-        device.options['resolution'].value = int(request.POST.get("resolution"))
-        device.options['source'].value = request.POST.get("source")
+        device_name = request.POST.get("scanner")
+        device_mode = request.POST.get("mode")
+        device_resolution = int(request.POST.get("resolution"))
+        device_source = request.POST.get("source")
         multipage = bool(int(request.POST.get("multipage")))
-
         
     except Exception, e:
         return HttpResponse(json.dumps({'error' : 'Invalid post data'}), content_type="application/json")
-    scan_session = device.scan(multiple=multipage)
-    scan_success = False
 
-    if not multipage:
-
-        try:
-            while True:
-                scan_session.scan.read()
-                scan_success = True
-        except EOFError:
-            if not scan_success :
-                return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
-    else :
-        try:
-            while True:
-                try:
-                    scan_session.scan.read()
-                    scan_success = True
-                except EOFError:
-                    pass
-        except StopIteration:
-
-            if not scan_success :
-                return HttpResponse(json.dumps({'error' : 'Unable to scan document'}), content_type="application/json")
-
-    # Init the session manager
-    sessionManager = SessionScanedImagesManager(request)
     try:
-        nb_images = 0
-        for image in scan_session.images :
+        print "init"
+        sane.init()
+        print "open device :", device_name
+        scanner = sane.open(device_name)
+        #scanner.get_options()
+        print "set parameters"
+        pprint.pprint(scanner)
+        print "set resolution", device_resolution
+        scanner.resolution = device_resolution
+        print type(device_source)
+        print "set scanner source", str(device_source)
+        scanner.source = str(device_source)
+        print "set scanner mode", str(device_mode)
+        scanner.mode = str(device_mode)
+        print "init finalized"
+    except Exception as e:
+        pprint.pprint(e)
+        return HttpResponse(json.dumps({'error' : 'Unable to initialize the scanner'}), content_type="application/json")
+
+
+    sessionManager = SessionScanedImagesManager(request)
+    nb_images = 0
+    try:
+        while True:
+            print "get image"
+            image = scanner.scan()
+            print "passe1"
             tf = tempfile.NamedTemporaryFile(prefix="pyscanweb_")
+            print "passe2"
             image.save(tf.name + ".jpg", 'JPEG')
+            print "passe3"
             sessionManager.session_add_image(tf.name + ".jpg")
-            nb_images+=1
-    except Exception, e:
-        return HttpResponse(json.dumps({'error' : "Returned error : %s" % (str(e))}), content_type="application/json")
+            print "passe4"
+            nb_images += 1
+            print nb_images
+            if not multipage:
+                break;
+    except:
+        print "fucke"
+        pprint.pprint(sys.exc_info())
+        if nb_images == 0:
+            return HttpResponse(json.dumps({'error' : 'Unable to scan documents'}), content_type="application/json")
 
 
+    print "generate json"
     linksList = [];
     images_list = sessionManager.get_session_images_list()
+    pprint.pprint( images_list)
     total_image_count = len(images_list)
     print nb_images
     for i in range(total_image_count-nb_images, total_image_count):
