@@ -2,6 +2,16 @@
 
 Pyscan is a web interface that allows users to use the pyinsane library through their navigator.
 
+To work properly, PyScanWeb needs the following dependancying:
+
+* Python fpdf
+* Python Django
+* Python Sane
+
+To install them from pip, use:
+
+```pip install -r requirements.txt```
+
 # Development
 
 The dev_env does contain a lot of stuff to help you change CSS and JS files. All you have to do is to install grunt and launch the following commands :
