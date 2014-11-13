@@ -142,6 +142,7 @@ def generate_pdf(request):
     try:
         with open(pdf_filename, "rb") as f:
             response = HttpResponse(f.read(), content_type="application/force-download")
+            response['Content-Disposition'] = 'attachment; filename="%s"' % "merged_files.pdf"
             remove(pdf_filename)
             return response
     except IOError:
