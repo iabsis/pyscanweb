@@ -45,7 +45,6 @@ def json_launch_scanner(request):
         device_resolution = int(request.POST.get("resolution"))
         device_source = request.POST.get("source")
         multipage = bool(int(request.POST.get("multipage")))
-        
     except Exception, e:
         return HttpResponse(json.dumps({'error' : 'Invalid post data'}), content_type="application/json")
 
@@ -61,22 +60,38 @@ def json_launch_scanner(request):
 
     sessionManager = SessionScanedImagesManager(request)
     nb_images = 0
-    try:
-        while True:
+
+    if not multipage:
+        try:
             image = scanner.scan()
             tf = tempfile.NamedTemporaryFile(prefix="pyscanweb_")
             image.save(tf.name + ".jpg", 'JPEG')
             sessionManager.session_add_image(tf.name + ".jpg")
             nb_images += 1
-            print nb_images
-            if not multipage:
-                break;
-    except:
-        pprint.pprint(sys.exc_info())
-        if nb_images == 0:
+        except:
+            pprint.pprint(sys.exc_info())
+            if nb_images == 0:
+                return HttpResponse(json.dumps({'error' : 'Unable to scan documents'}), content_type="application/json")
+        finally:
+            scanner.close()
+    else:    
+        try:
+            multi_scan = scanner.multi_scan()
+            while True:
+                image = multi_scan.next()
+                tf = tempfile.NamedTemporaryFile(prefix="pyscanweb_")
+                image.save(tf.name + ".jpg", 'JPEG')
+                sessionManager.session_add_image(tf.name + ".jpg")
+                nb_images += 1
+        except StopIteration:
+            pass
+        except:
             return HttpResponse(json.dumps({'error' : 'Unable to scan documents'}), content_type="application/json")
-    finally:
-        scanner.close()
+        finally:
+            print "scanner close"
+            scanner.close()
+
+    
 
     linksList = [];
     images_list = sessionManager.get_session_images_list()
@@ -120,13 +135,11 @@ def generate_pdf(request):
 
     pdf_filename = tempfile.NamedTemporaryFile(prefix="pyscanweb_pdf_").name + ".pdf"
     f = fpdf.FPDF()
-    
 
     for image in images_list:
         sessionImage = sessionManager.get_image(int(image))
         f.add_page()
         f.image(sessionImage, x=0, y=0, w=210, h=0)
-
 
     f.output(name=pdf_filename, dest='F')
 
